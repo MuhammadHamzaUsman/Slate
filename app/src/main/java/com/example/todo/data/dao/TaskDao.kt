@@ -21,7 +21,7 @@ interface TaskDao {
     fun getTasksByStage(stage: String): Flow<List<TaskWithDetails>>
 
     @Query("SELECT * FROM task WHERE id = :id ")
-    fun getTask(id: Int): Flow<TaskWithDetails>
+    fun getTask(id: Int): Flow<TaskWithDetails?>
 
     @Insert
     suspend fun insertTask(task: TaskEntity)

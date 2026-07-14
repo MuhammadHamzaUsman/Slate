@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.todo.model.Task
 
 @Entity(
     tableName = "task",
@@ -34,4 +35,14 @@ data class TaskEntity(
 
     @ColumnInfo(defaultValue = Stage.INCOMPLETE_NAME)
     val stage: String
-)
+){
+    companion object {
+        @JvmStatic
+        fun createFromTask(task: Task) = TaskEntity(
+            title = task.title,
+            description = task.description,
+            category = task.category.name,
+            stage = task.stage.name
+        )
+    }
+}

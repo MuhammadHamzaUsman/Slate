@@ -2,6 +2,7 @@ package com.example.todo.data.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.example.todo.model.Task
 
 data class TaskWithDetails(
     @Embedded
@@ -17,4 +18,6 @@ data class TaskWithDetails(
         entityColumn = "name"
     )
     val stage: Stage
-)
+){
+    fun toTask() = Task(task.id, task.title, task.description, category, stage)
+}
