@@ -10,8 +10,10 @@ data class Category(
     val color: Long
 ){
     companion object {
-        const val DEFAULT_NAME = "Un Categorized"
+        const val DEFAULT_NAME = "Uncategorized"
         const val DEFAULT_COLOR = 0xFFFFFFFF
+
+        val DEFAULT_CATEGORY = Category(DEFAULT_NAME, DEFAULT_COLOR)
 
         const val INITIALIZER_SQL =
         """

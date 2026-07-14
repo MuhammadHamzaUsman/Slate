@@ -7,7 +7,9 @@ import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 import com.example.todo.data.model.TaskEntity
 import com.example.todo.data.model.TaskWithDetails
-import com.example.todo.model.Task
+import com.example.todo.domain.model.Task
+import com.example.todo.domain.repository.TaskRepository
+import com.example.todo.ui.homescreen.SearchState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -16,17 +18,33 @@ class LocalTaskRepository(
     private val categoryDao: CategoryDao,
     private val stageDao: StageDao
 ) : TaskRepository {
-    override fun getTasks(): Flow<List<Task>> = taskDao.getTasks().mapToTaskList()
+    override fun getTasks(): Flow<List<Task>> = taskDao
+        .getTasks()
+        .mapToTaskList()
 
-    override fun getTasksByCategory(category: String): Flow<List<Task>> = taskDao.getTasksByCategory(category).mapToTaskList()
+    override fun getFilteredTasks(searchState: SearchState): Flow<List<Task>> = taskDao
+        .getFilteredTasks(
+            title = searchState.query.ifBlank { null },
+            category = searchState.category?.name,
+            stage = searchState.stage?.name
+        )
+        .mapToTaskList()
 
-    override fun getTasksByStage(stage: String): Flow<List<Task>> = taskDao.getTasksByStage(stage).mapToTaskList()
+    override fun getTasksByCategory(category: Category): Flow<List<Task>> = taskDao
+        .getTasksByCategory(category.name)
+        .mapToTaskList()
 
-    override fun getTask(id: Int): Flow<Task?> = taskDao.getTask(id).map { it?.toTask() }
+    override fun getTasksByStage(stage: Stage): Flow<List<Task>> = taskDao
+        .getTasksByStage(stage.name)
+        .mapToTaskList()
+
+    override fun getTask(id: Int): Flow<Task?> = taskDao
+        .getTask(id)
+        .map { it?.toTask() }
 
     override suspend fun insertTask(task: Task) = taskDao.insertTask(TaskEntity.createFromTask(task))
     override suspend fun updateTask(task: Task) = taskDao.updateTask(TaskEntity.createFromTask(task))
-    override suspend fun deleteTask(task: Task) = taskDao.deleteTask(TaskEntity.createFromTask(task))
+    override suspend fun deleteTask(taskIds: Set<Int>) = taskDao.deleteTask(taskIds)
 
     override fun getCategories(): Flow<List<Category>> = categoryDao.getCategories()
     override suspend fun addCategory(category: Category) = categoryDao.addCategory(category)

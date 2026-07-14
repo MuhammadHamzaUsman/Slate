@@ -1,4 +1,4 @@
-package com.example.todo.model
+package com.example.todo.domain.model
 
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage

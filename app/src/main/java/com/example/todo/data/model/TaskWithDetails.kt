@@ -2,7 +2,7 @@ package com.example.todo.data.model
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.example.todo.model.Task
+import com.example.todo.domain.model.Task
 
 data class TaskWithDetails(
     @Embedded

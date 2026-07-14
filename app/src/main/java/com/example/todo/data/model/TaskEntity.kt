@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.example.todo.model.Task
+import com.example.todo.domain.model.Task
 
 @Entity(
     tableName = "task",
