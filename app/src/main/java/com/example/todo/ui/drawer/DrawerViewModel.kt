@@ -8,7 +8,6 @@ import com.example.todo.domain.repository.TaskRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -19,12 +18,17 @@ class DrawerViewModel(
 ): ViewModel() {
     private val _uiState = MutableStateFlow(DrawerUiState())
     val uiState = combine(
-        flow = _uiState,
-        flow2 = taskRepository.getCategories(),
-        flow3 = taskRepository.getStages()
-    ){ uiState, categories, stages ->
-        uiState.copy(categories = categories, stages = stages)
-    }
+            flow = _uiState,
+            flow2 = taskRepository.getCategories(),
+            flow3 = taskRepository.getStages()
+        ){ uiState, categories, stages ->
+            uiState.copy(categories = categories, stages = stages)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = DrawerUiState()
+        )
 
     fun openDrawer(){
         _uiState.update { it.copy(visible = true) }

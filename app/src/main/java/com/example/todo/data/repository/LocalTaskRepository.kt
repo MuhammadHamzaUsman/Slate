@@ -42,7 +42,7 @@ class LocalTaskRepository(
         .getTask(id)
         .map { it?.toTask() }
 
-    override suspend fun insertTask(task: Task) = taskDao.insertTask(TaskEntity.createFromTask(task))
+    override suspend fun insertTask(task: Task) = taskDao.insertTask(TaskEntity.createFromTask(task)).toInt()
     override suspend fun updateTask(task: Task) = taskDao.updateTask(TaskEntity.createFromTask(task))
     override suspend fun deleteTask(taskIds: Set<Int>) = taskDao.deleteTask(taskIds)
 

@@ -11,7 +11,7 @@ data class Category(
 ){
     companion object {
         const val DEFAULT_NAME = "Uncategorized"
-        const val DEFAULT_COLOR = 0xFFFFFFFF
+        const val DEFAULT_COLOR = 0xFFE4C95F
 
         val DEFAULT_CATEGORY = Category(DEFAULT_NAME, DEFAULT_COLOR)
 

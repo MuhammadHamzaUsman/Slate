@@ -37,7 +37,7 @@ interface TaskDao {
     fun getFilteredTasks(title: String?, category: String?, stage: String?): Flow<List<TaskWithDetails>>
 
     @Insert
-    suspend fun insertTask(task: TaskEntity): Int
+    suspend fun insertTask(task: TaskEntity): Long
 
     @Update
     suspend fun updateTask(task: TaskEntity)

@@ -44,7 +44,6 @@ class HomeScreenViewModel(
             initialValue = emptyList()
         )
 
-
     fun updateSearchQuery(newQuery: String){
         _searchState.update { state -> state.copy(query = newQuery) }
     }
@@ -65,20 +64,20 @@ class HomeScreenViewModel(
         _searchState.update { state -> state.copy(stage = null) }
     }
 
-    fun enterDeleteMode(){
+    fun enterSelectMode(){
         val state = _uiState.value
 
         if(state.showingDialog || state.isLoading) return
 
         _uiState.update { state ->
-            state.copy(isDeleting = true)
+            state.copy(isSelecting = true)
         }
     }
 
-    fun addTaskToBeDeleted(task: Task){
+    fun addToSelectedTask(task: Task){
         _uiState.update { state ->
             state.copy(
-                taskToBeDeleted = state.taskToBeDeleted + task.id
+                taskSelected = state.taskSelected + task.id
             )
         }
     }
@@ -86,15 +85,15 @@ class HomeScreenViewModel(
     fun deleteTasks(){
         val state = _uiState.value
 
-        if(state.isDeleting && state.taskToBeDeleted.isNotEmpty()){
+        if(state.taskSelected.isNotEmpty()){
             viewModelScope.launch {
                 _uiState.update { state -> state.copy(isLoading = true) }
-                taskRepository.deleteTask(state.taskToBeDeleted)
+                taskRepository.deleteTask(state.taskSelected)
                 _uiState.update { state ->
                     state.copy(
                         isLoading = false,
-                        taskToBeDeleted = emptySet(),
-                        isDeleting = false
+                        taskSelected = emptySet(),
+                        isSelecting = false
                     )
                 }
             }
