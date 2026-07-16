@@ -2,4 +2,14 @@
     <string name="app_name">ToDo</string>
     <string name="stage">Stage</string>
     <string name="categories">Categories</string>
+    <string name="close_drawer">Close Drawer</string>
+    <string name="remove_header">Remove %1$s</string>
+    <string name="add_header">add %1$s</string>
+    <string name="category">Category</string>
+    <string name="title">Title</string>
+    <string name="save">Save</string>
+    <string name="remove_all_filter">Remove All Filter</string>
+    <string name="delete_button_to_select_and_the_delete">Delete Button to select and the delete</string>
+    <string name="max_15_characters">Max %1$d/15 characters</string>
+    <string name="max_characters">Max %1$d/%2$d characters</string>
 </resources>

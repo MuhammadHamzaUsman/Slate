@@ -3,6 +3,7 @@ package com.example.todo.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.todo.data.model.Category
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getCategories(): Flow<List<Category>>
 
-    @Insert
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE
+    )
     suspend fun addCategory(category: Category)
 
     @Delete

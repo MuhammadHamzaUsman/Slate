@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.compose.colorpicker)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -61,4 +62,8 @@ dependencies {
     ksp(libs.androidx.room.compiler) {
         exclude(group = "com.intellij", module = "annotations")
     }
+}
+
+configurations.configureEach {
+    exclude(group = "com.intellij", module = "annotations")
 }

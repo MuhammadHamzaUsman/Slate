@@ -1,5 +1,8 @@
 package com.example.todo.ui.drawer
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.toColorLong
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.model.Category
@@ -22,7 +25,10 @@ class DrawerViewModel(
             flow2 = taskRepository.getCategories(),
             flow3 = taskRepository.getStages()
         ){ uiState, categories, stages ->
-            uiState.copy(categories = categories, stages = stages)
+            uiState.copy(
+                categories = categories,
+                stages = stages
+            )
         }
         .stateIn(
             scope = viewModelScope,
@@ -30,12 +36,14 @@ class DrawerViewModel(
             initialValue = DrawerUiState()
         )
 
-    fun openDrawer(){
-        _uiState.update { it.copy(visible = true) }
-    }
 
-    fun closeDrawer(){
-        _uiState.update { it.copy(visible = false) }
+    fun resetSelection() {
+        _uiState.update { state ->
+            state.copy(
+                selectedCategory = null,
+                selectedStage = null
+            )
+        }
     }
 
     fun selectCategory(category: Category){
@@ -43,7 +51,7 @@ class DrawerViewModel(
     }
 
     fun unSelectCategory(){
-         _uiState.update { it.copy(selectedCategory = null) }
+        _uiState.update { it.copy(selectedCategory = null) }
     }
 
     fun selectStage(stage: Stage){
@@ -54,19 +62,39 @@ class DrawerViewModel(
         _uiState.update { it.copy(selectedStage = null) }
     }
 
-    fun addCategory(category: Category){
-        viewModelScope.launch(Dispatchers.IO) { taskRepository.addCategory(category) }
+    fun enterRemovingMode(type: ActionType){
+        _uiState.update { it.copy(removing = type) }
+    }
+
+    fun exitRemovingMode(){
+        _uiState.update { it.copy(removing = ActionType.NONE) }
+    }
+
+    fun addCategory(name: String, color: Color){
+        viewModelScope.launch(Dispatchers.IO) { taskRepository.addCategory(Category(name, color.toArgb().toLong())) }
     }
 
     fun removeCategory(category: Category){
+        if(category == Category.DEFAULT_CATEGORY) return
+
         viewModelScope.launch(Dispatchers.IO) { taskRepository.removeCategory(category) }
     }
 
-    fun addStage(stage: Stage){
-        viewModelScope.launch(Dispatchers.IO) { taskRepository.addStage(stage) }
+    fun addStage(name: String, color: Color){
+        viewModelScope.launch(Dispatchers.IO) { taskRepository.addStage(Stage(name, color.toArgb().toLong())) }
     }
 
     fun removeStage(stage: Stage){
+        if(stage == Stage.COMPLETED_STAGE || stage == Stage.INCOMPLETE_STAGE) return
+
         viewModelScope.launch(Dispatchers.IO) { taskRepository.removeStage(stage) }
+    }
+
+    fun showDialog(type: ActionType){
+        _uiState.update { state -> state.copy(dialogType = type) }
+    }
+
+    fun dismissDialog(){
+        _uiState.update { state -> state.copy(dialogType = ActionType.NONE) }
     }
 }

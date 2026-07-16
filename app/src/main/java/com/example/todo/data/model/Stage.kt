@@ -23,9 +23,9 @@ data class Stage(
 
         const val INITIALIZER_SQL =
         """
-        INSERT INTO category
-        VALUES ($INCOMPLETE_NAME, $INCOMPLETE_COLOR),
-            ($COMPLETED_NAME, $COMPLETED_COLOR);
+        INSERT INTO stage
+        VALUES ("$INCOMPLETE_NAME", $INCOMPLETE_COLOR),
+            ("$COMPLETED_NAME", $COMPLETED_COLOR);
         """
     }
 }

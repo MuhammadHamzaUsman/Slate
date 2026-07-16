@@ -39,14 +39,27 @@ abstract class ToDoDatabase: RoomDatabase() {
                                 super.onCreate(db)
 
                                 CoroutineScope(Dispatchers.IO + CoroutineName(DATABASE_NAME + "coroutine")).launch {
-                                    db.execSQL(Category.INITIALIZER_SQL + Stage.INITIALIZER_SQL)
+                                    db.execSQL(Category.INITIALIZER_SQL)
+                                    db.execSQL(Stage.INITIALIZER_SQL)
+                                }
+                            }
+
+                            override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                                super.onDestructiveMigration(db)
+
+                                CoroutineScope(Dispatchers.IO + CoroutineName(DATABASE_NAME + "coroutine")).launch {
+                                    db.execSQL(Category.INITIALIZER_SQL)
+                                    db.execSQL(Stage.INITIALIZER_SQL)
                                 }
                             }
                         }
                     )
-                    .fallbackToDestructiveMigration(false)
+                    .fallbackToDestructiveMigration(true)
                     .build()
-                    .also { INSTANCE = it }
+                    .also {
+                        INSTANCE = it
+                        it.openHelper.writableDatabase
+                    }
             }
     }
 }

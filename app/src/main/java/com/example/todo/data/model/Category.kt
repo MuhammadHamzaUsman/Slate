@@ -18,7 +18,7 @@ data class Category(
         const val INITIALIZER_SQL =
         """
         INSERT INTO category
-        VALUES ($DEFAULT_NAME, $DEFAULT_COLOR);
+        VALUES ("$DEFAULT_NAME", $DEFAULT_COLOR);
         """
     }
 }
