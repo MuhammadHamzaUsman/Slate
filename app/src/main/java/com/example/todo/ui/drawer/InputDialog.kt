@@ -89,7 +89,12 @@ fun InputDialog(
                         .size(40.dp)
                         .clickable(
                             enabled = InputDialogRules.isDialogSaveEnabled(textField)
-                        ) { onSave(textField, color) }
+                        ) {
+                            onSave(
+                                textField,
+                                if (color == Color.Transparent) DrawerUiState.INITIAL_COLOR else color
+                            )
+                        }
                 )
             }
 

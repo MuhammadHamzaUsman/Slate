@@ -12,8 +12,6 @@ data class DrawerUiState(
     val categories: List<Category> = emptyList(),
     val stages: List<Stage> = emptyList()
 ){
-    val hasSelection = selectedCategory != null && selectedStage != null
-
     companion object{
         val INITIAL_COLOR = Color.White
     }

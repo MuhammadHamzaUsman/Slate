@@ -82,6 +82,23 @@ class HomeScreenViewModel(
         }
     }
 
+    fun removeFromSelectedTask(task: Task) {
+        _uiState.update {
+            it.copy(
+                taskSelected = it.taskSelected - task.id
+            )
+        }
+    }
+
+    fun exitSelectingMode(){
+        _uiState.update { state ->
+            state.copy(
+                isSelecting = false,
+                taskSelected = emptySet()
+            )
+        }
+    }
+
     fun deleteTasks(){
         val state = _uiState.value
 

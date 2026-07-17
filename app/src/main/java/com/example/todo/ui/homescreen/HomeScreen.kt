@@ -2,6 +2,7 @@ package com.example.todo.ui.homescreen
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,10 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
     val tasks by viewModel.filteredTasks.collectAsStateWithLifecycle()
+
+    BackHandler(uiState.isSelecting) {
+        viewModel.exitSelectingMode()
+    }
 
     LaunchedEffect(drawerState) {
         val category = drawerState.selectedCategory
@@ -88,12 +93,21 @@ fun HomeScreen(
                     .fillMaxWidth(),
             ) {
                 items(tasks, key = Task::id){
+                    val isSelected = it.id in uiState.taskSelected
+
                     TaskListItem(
                         task = it,
-                        isSelected = it.id in uiState.taskSelected,
+                        isSelected = isSelected,
                         onActionButtonClicked = viewModel::completeTask,
                         onItemClicked = { task ->
-                            if (uiState.isSelecting) viewModel.addToSelectedTask(task)
+                            if (uiState.isSelecting) {
+                                if(isSelected) {
+                                    viewModel.removeFromSelectedTask(task)
+                                }
+                                else {
+                                    viewModel.addToSelectedTask(task)
+                                }
+                            }
                             else onTaskClicked(it)
                         },
                         onLongPress = { task ->
@@ -125,6 +139,6 @@ private fun HomeScreenPreview() {
         onStageClicked = { },
         onCategoryClicked = { },
         onTaskClicked = { },
-        onFABClick = { },
+        onFABClick = { }
     )
 }
