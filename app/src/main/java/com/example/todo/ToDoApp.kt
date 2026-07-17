@@ -16,7 +16,7 @@ import com.example.todo.di.AppViewModelProvider
 import com.example.todo.ui.drawer.ActionType
 import com.example.todo.ui.drawer.Drawer
 import com.example.todo.ui.drawer.DrawerViewModel
-import com.example.todo.ui.homescreen.HomeScreen
+import com.example.todo.ui.navigation.ToDoNavigation
 import com.example.todo.ui.theme.AppColor
 import kotlinx.coroutines.launch
 
@@ -72,16 +72,15 @@ fun ToDoApp(modifier: Modifier = Modifier) {
                 },
                 onDialogDismiss = drawerViewModel::dismissDialog,
                 onUpClicked = { coroutineScope.launch { drawerState.close() } },
-                onBack = { coroutineScope.launch { drawerState.close() } },
                 modifier = Modifier.fillMaxWidth(0.9f)
             )
         }
     ) {
-        HomeScreen(
+        ToDoNavigation(
             drawerState = drawerUiState,
             resetSelection = drawerViewModel::resetSelection,
-            onStageClicked = { coroutineScope.launch { drawerState.open() } },
-            onCategoryClicked = { coroutineScope.launch { drawerState.open() } }
+            onStageClicked = { coroutineScope.launch{ drawerState.open() } },
+            onCategoryClicked = { coroutineScope.launch{ drawerState.open() } }
         )
     }
 }

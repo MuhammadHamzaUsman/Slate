@@ -5,13 +5,15 @@ import com.example.todo.data.dao.StageDao
 import com.example.todo.data.dao.TaskDao
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
-import com.example.todo.data.model.TaskEntity
 import com.example.todo.data.model.TaskWithDetails
+import com.example.todo.data.model.toTaskEntity
 import com.example.todo.domain.model.Task
 import com.example.todo.domain.repository.TaskRepository
 import com.example.todo.ui.homescreen.SearchState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class LocalTaskRepository(
     private val taskDao: TaskDao,
@@ -38,21 +40,43 @@ class LocalTaskRepository(
         .getTasksByStage(stage.name)
         .mapToTaskList()
 
-    override fun getTask(id: Int): Flow<Task?> = taskDao
-        .getTask(id)
-        .map { it?.toTask() }
+    override fun getTask(id: Int): Task? = taskDao.getTask(id)?.toTask()
 
-    override suspend fun insertTask(task: Task) = taskDao.insertTask(TaskEntity.createFromTask(task)).toInt()
-    override suspend fun updateTask(task: Task) = taskDao.updateTask(TaskEntity.createFromTask(task))
+    override suspend fun insertTask(task: Task) = withContext(Dispatchers.IO) {
+        taskDao.insertTask(
+            task.toTaskEntity()
+        ).toInt()
+    }
+    override suspend fun updateTask(task: Task) = withContext(Dispatchers.IO) {
+        taskDao.updateTask(
+            task.toTaskEntity()
+        )
+    }
     override suspend fun deleteTask(taskIds: Set<Int>) = taskDao.deleteTask(taskIds)
 
     override fun getCategories(): Flow<List<Category>> = categoryDao.getCategories()
-    override suspend fun addCategory(category: Category) = categoryDao.addCategory(category)
-    override suspend fun removeCategory(category: Category) = categoryDao.removeCategory(category)
+    override suspend fun addCategory(category: Category) = withContext(Dispatchers.IO) {
+        categoryDao.addCategory(
+            category
+        )
+    }
+    override suspend fun removeCategory(category: Category) = withContext(Dispatchers.IO) {
+        categoryDao.removeCategory(
+            category
+        )
+    }
 
     override fun getStages(): Flow<List<Stage>> = stageDao.getStages()
-    override suspend fun addStage(stage: Stage) = stageDao.addStage(stage)
-    override suspend fun removeStage(stage: Stage) = stageDao.removeStage(stage)
+    override suspend fun addStage(stage: Stage) = withContext(Dispatchers.IO) {
+        stageDao.addStage(
+            stage
+        )
+    }
+    override suspend fun removeStage(stage: Stage) = withContext(Dispatchers.IO) {
+        stageDao.removeStage(
+            stage
+        )
+    }
 
     private fun Flow<List<TaskWithDetails>>.mapToTaskList(): Flow<List<Task>> = map { taskWithDetails -> taskWithDetails.map { it.toTask() } }
 }

@@ -18,8 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todo.di.AppViewModelProvider
 import com.example.todo.domain.model.Task
 import com.example.todo.ui.drawer.DrawerUiState
 import com.example.todo.ui.drawer.DrawerViewModel
@@ -30,11 +28,13 @@ import com.example.todo.ui.util.previewTaskRepository
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeScreenViewModel = viewModel(factory = AppViewModelProvider.homeScreenViewModelFactory()),
+    viewModel: HomeScreenViewModel,
     drawerState: DrawerUiState,
     resetSelection: () -> Unit,
     onStageClicked: () -> Unit,
-    onCategoryClicked: () -> Unit
+    onCategoryClicked: () -> Unit,
+    onTaskClicked: (Task) -> Unit,
+    onFABClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchState by viewModel.searchState.collectAsStateWithLifecycle()
@@ -52,6 +52,9 @@ fun HomeScreen(
 
     Scaffold(
         containerColor = AppColor.Background,
+        floatingActionButton = {
+            FloatingActionButton(onClick = onFABClick)
+        },
         modifier = modifier
     ) { innerPadding ->
         Column(
@@ -80,6 +83,7 @@ fun HomeScreen(
             )
 
             LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .fillMaxWidth(),
             ) {
@@ -90,9 +94,7 @@ fun HomeScreen(
                         onActionButtonClicked = viewModel::completeTask,
                         onItemClicked = { task ->
                             if (uiState.isSelecting) viewModel.addToSelectedTask(task)
-                            else {
-                                // TODO
-                            }
+                            else onTaskClicked(it)
                         },
                         onLongPress = { task ->
                             viewModel.enterSelectMode()
@@ -121,6 +123,8 @@ private fun HomeScreenPreview() {
         drawerState = drawerState,
         resetSelection = { },
         onStageClicked = { },
-        onCategoryClicked = { }
+        onCategoryClicked = { },
+        onTaskClicked = { },
+        onFABClick = { },
     )
 }

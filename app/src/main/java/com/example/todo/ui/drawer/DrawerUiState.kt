@@ -1,6 +1,6 @@
 package com.example.todo.ui.drawer
 
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.compose.ui.graphics.Color
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 
@@ -13,6 +13,10 @@ data class DrawerUiState(
     val stages: List<Stage> = emptyList()
 ){
     val hasSelection = selectedCategory != null && selectedStage != null
+
+    companion object{
+        val INITIAL_COLOR = Color.White
+    }
 }
 
 enum class ActionType{

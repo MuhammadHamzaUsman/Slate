@@ -13,16 +13,17 @@ data class TaskState(
     val saving: Boolean = false
 )
 
-fun Task.toTaskState() = TaskState(
+fun Task.toTaskState(isSaving: Boolean) = TaskState(
     id = id,
     title = title,
     description = description,
     category = category,
     stage = stage,
-    saving = false
+    saving = isSaving
 )
 
 fun TaskState.toTask() = Task(
+    id = id ?: 0,
     title = title,
     description = description,
     category = category,

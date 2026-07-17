@@ -30,19 +30,23 @@ data class TaskEntity(
     val title: String,
     val description: String,
 
-    @ColumnInfo(defaultValue = Category.DEFAULT_NAME)
+    @ColumnInfo(
+        index = true,
+        defaultValue = Category.DEFAULT_NAME
+    )
     val category: String,
 
-    @ColumnInfo(defaultValue = Stage.INCOMPLETE_NAME)
+    @ColumnInfo(
+        index = true,
+        defaultValue = Stage.INCOMPLETE_NAME
+    )
     val stage: String
-){
-    companion object {
-        @JvmStatic
-        fun createFromTask(task: Task) = TaskEntity(
-            title = task.title,
-            description = task.description,
-            category = task.category.name,
-            stage = task.stage.name
-        )
-    }
-}
+)
+
+fun Task.toTaskEntity(): TaskEntity = TaskEntity(
+    id = id,
+    title = title,
+    description = description,
+    category = category.name,
+    stage = stage.name
+)

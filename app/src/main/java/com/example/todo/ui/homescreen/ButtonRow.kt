@@ -1,9 +1,9 @@
 package com.example.todo.ui.homescreen
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -38,14 +38,14 @@ inline fun ButtonRow(
     noinline onRemoveFilterClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    FlowRow(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
             .fillMaxWidth()
-            .height(30.dp)
     ) {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.height(30.dp)
         ) {
             ButtonRowLabel(
                 text = stage?.name ?: stringResource(R.string.stage),
@@ -65,7 +65,8 @@ inline fun ButtonRow(
         }
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.height(30.dp)
         ) {
             Icon(
                 painter = painterResource(R.drawable.filter_off_icon),

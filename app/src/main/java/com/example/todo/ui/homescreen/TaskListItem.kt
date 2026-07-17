@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 import com.example.todo.domain.model.Task
+import com.example.todo.ui.componenets.CircleButton
 import com.example.todo.ui.componenets.Label
 import com.example.todo.ui.theme.AppColor
 
@@ -55,9 +56,6 @@ fun TaskListItem(
     onLongPress: (Task) -> Unit
 ) {
     val color by animateColorAsState(if(isSelected) AppColor.OnSurfaceAndBackground else AppColor.Outline,)
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
 
     Card(
         colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
@@ -79,38 +77,8 @@ fun TaskListItem(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .border(
-                        width = 2.dp,
-                        color = AppColor.ButtonOutline,
-                        shape = CircleShape
-                    )
-                    .background(AppColor.Surface)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = ripple(radius = 24.dp),
-                        onClick = { onActionButtonClicked(task) }
-                    )
-                    .clip(CircleShape)
-            ) {
-                this@Row.AnimatedVisibility(
-                    visible = isPressed,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Box(
-                        content = {},
-                        modifier = Modifier
-                            .padding(6.dp)
-                            .fillMaxSize()
-                            .background(
-                                color = AppColor.ButtonOutline,
-                                shape = CircleShape
-                            )
-                    )
-                }
+            CircleButton{
+                onActionButtonClicked(task)
             }
 
             Column(
@@ -139,7 +107,8 @@ fun TaskListItem(
                         text = task.title,
                         color = AppColor.OnSurfaceAndBackground,
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     Text(

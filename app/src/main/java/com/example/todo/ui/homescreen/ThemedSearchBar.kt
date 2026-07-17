@@ -31,7 +31,7 @@ inline fun ThemedSearchBar(
                 colors = TextFieldDefaults.colors(
                     focusedTextColor = AppColor.OnSurfaceAndBackground,
                     unfocusedTextColor = AppColor.OnSurfaceAndBackground,
-                    cursorColor = AppColor.OnSurfaceAndBackground,
+                    cursorColor = AppColor.ButtonOutline,
                     focusedContainerColor = AppColor.Surface,
                     unfocusedContainerColor = AppColor.Surface,
                     focusedPlaceholderColor = AppColor.OnSurfaceAndBackground,

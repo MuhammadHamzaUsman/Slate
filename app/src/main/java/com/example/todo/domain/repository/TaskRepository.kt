@@ -11,7 +11,7 @@ interface TaskRepository {
     fun getFilteredTasks(searchState: SearchState): Flow<List<Task>>
     fun getTasksByCategory(category: Category): Flow<List<Task>>
     fun getTasksByStage(stage: Stage): Flow<List<Task>>
-    fun getTask(id: Int): Flow<Task?>
+    fun getTask(id: Int): Task?
 
     suspend fun insertTask(task: Task): Int
     suspend fun updateTask(task: Task)

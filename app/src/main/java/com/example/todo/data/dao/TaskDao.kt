@@ -25,7 +25,7 @@ interface TaskDao {
 
     @Transaction
     @Query("SELECT * FROM task WHERE id = :id ")
-    fun getTask(id: Int): Flow<TaskWithDetails?>
+    fun getTask(id: Int): TaskWithDetails?
 
     @Transaction
     @Query("""

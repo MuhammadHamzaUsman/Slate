@@ -1,53 +1,105 @@
 package com.example.todo.ui.taskscreen
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
-import com.example.todo.domain.model.Task
 import com.example.todo.domain.repository.TaskRepository
+import com.example.todo.ui.navigation.AppRoute
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(FlowPreview::class)
 class TaskScreenViewModel(
-    task: Task? = null,
+    savedStateHandle: SavedStateHandle,
     private val taskRepository: TaskRepository
 ): ViewModel() {
-    private val _noteState: MutableStateFlow<TaskState> = MutableStateFlow(task?.toTaskState() ?: TaskState())
-    val noteState = _noteState.asStateFlow()
+    private val _taskState: MutableStateFlow<TaskState> = MutableStateFlow(TaskState())
+    val taskState = _taskState
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+            initialValue = TaskState()
+        )
+
+    init {
+        val route = savedStateHandle.toRoute<AppRoute.TaskScreen>()
+        val taskId = route.taskId
+
+        if(taskId != null){
+            viewModelScope.launch(Dispatchers.IO) {
+                taskRepository.getTask(taskId)?.let { task ->
+                    _taskState.update { task.toTaskState(it.saving) }
+                }
+            }
+        }
+
+        viewModelScope.launch {
+            while (true){
+                delay(SAVE_TIME_GAP.milliseconds)
+                saveTask()
+            }
+        }
+    }
 
     fun updateTitle(title: String){
-        _noteState.update { it.copy(title = title) }
+        _taskState.update { it.copy(title = title) }
     }
 
     fun updateDescription(description: String){
-        _noteState.update { it.copy(description = description) }
+        _taskState.update { it.copy(description = description) }
     }
 
     fun updateCategory(category: Category){
-        _noteState.update { it.copy(category = category) }
+        _taskState.update { it.copy(category = category) }
     }
 
     fun updateStage(stage: Stage){
-        _noteState.update { it.copy(stage = stage) }
+        _taskState.update { it.copy(stage = stage) }
     }
 
-    fun saveNote(){
-        viewModelScope.launch {
-            _noteState.update { it.copy(saving = true) }
+    private suspend fun saveTask(){
+        _taskState.update { it.copy(saving = true) }
 
-            val task = noteState.value.toTask()
-            if(noteState.value.id == null){
-                val id = taskRepository.insertTask(task)
-                _noteState.update { it.copy(id = id) }
-            }
-            else{
-                taskRepository.updateTask(task)
-            }
-
-            _noteState.update { it.copy(saving = false) }
+        val task = taskState.value.toTask()
+        if(taskState.value.id == null){
+            val id = taskRepository.insertTask(task)
+            _taskState.update { it.copy(id = id) }
         }
+        else{
+            Log.d("TASK", task.toString())
+            taskRepository.updateTask(task)
+        }
+
+        _taskState.update { it.copy(saving = false) }
+    }
+
+    fun saveTask(context: Context){
+        viewModelScope.launch {
+            saveTask()
+
+            val toast = Toast(context).apply {
+                setText("Task Saved")
+            }
+
+            toast.show()
+        }
+    }
+
+    companion object{
+        private const val TIMEOUT_MILLIS = 5000L
+        private const val SAVE_TIME_GAP = 10000
     }
 }

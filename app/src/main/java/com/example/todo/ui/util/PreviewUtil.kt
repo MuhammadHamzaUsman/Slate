@@ -17,7 +17,7 @@ fun previewTaskRepository(): TaskRepository = object : TaskRepository {
     override fun getFilteredTasks(searchState: SearchState): Flow<List<Task>> = flowOf()
     override fun getTasksByCategory(category: Category): Flow<List<Task>> = flowOf()
     override fun getTasksByStage(stage: Stage): Flow<List<Task>> = flowOf()
-    override fun getTask(id: Int): Flow<Task?> = flowOf()
+    override fun getTask(id: Int): Task? = null
     override suspend fun insertTask(task: Task): Int = 0
     override suspend fun updateTask(task: Task) {}
     override suspend fun deleteTask(taskIds: Set<Int>) {}

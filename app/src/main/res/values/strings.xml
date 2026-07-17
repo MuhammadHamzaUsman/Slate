@@ -12,4 +12,5 @@
     <string name="delete_button_to_select_and_the_delete">Delete Button to select and the delete</string>
     <string name="max_15_characters">Max %1$d/15 characters</string>
     <string name="max_characters">Max %1$d/%2$d characters</string>
+    <string name="add_new_task">Add New Task</string>
 </resources>

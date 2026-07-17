@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.example.todo.R
 import com.example.todo.ui.theme.AppColor
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
@@ -114,7 +113,7 @@ fun InputDialog(
                             .fillMaxWidth()
                             .aspectRatio(1f),
                         controller = controller,
-                        initialColor = Color.White
+                        initialColor = DrawerUiState.INITIAL_COLOR
                     )
 
                     BrightnessSlider(
@@ -122,7 +121,7 @@ fun InputDialog(
                         borderColor = AppColor.Outline,
                         controller = controller,
                         wheelRadius = 5.dp,
-                        initialColor = Color.White,
+                        initialColor = DrawerUiState.INITIAL_COLOR,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(15.dp)
@@ -157,7 +156,7 @@ private fun ThemedTextField(
             focusedBorderColor = AppColor.Outline,
             unfocusedBorderColor = AppColor.Outline,
             errorBorderColor = AppColor.Error,
-            cursorColor = AppColor.OnSurfaceAndBackground,
+            cursorColor = AppColor.ButtonOutline,
             focusedLabelColor = AppColor.OnSurfaceAndBackground,
             unfocusedLabelColor = AppColor.OnSurfaceAndBackground,
             errorLabelColor = AppColor.Error,
@@ -170,7 +169,7 @@ private fun ThemedTextField(
                 modifier = Modifier
                     .size(30.dp)
                     .background(
-                        color = iconColor,
+                        color = if(iconColor == Color.Transparent) DrawerUiState.INITIAL_COLOR else iconColor,
                         shape = RoundedCornerShape(2.dp)
                     )
                     .clickable(onClick = onIconClick)

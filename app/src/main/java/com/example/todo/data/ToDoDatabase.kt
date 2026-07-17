@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [TaskEntity::class, Stage::class, Category::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class ToDoDatabase: RoomDatabase() {
     abstract fun getTaskDao(): TaskDao
