@@ -30,10 +30,21 @@ interface TaskDao {
     @Transaction
     @Query("""
         SELECT * FROM task
-        WHERE (:searchField IS NULL OR title LIKE '%' || :query || '%') AND
+        WHERE (:query IS NULL OR 
+            CASE WHEN :searchField = 'title' THEN title
+                WHEN :searchField = 'descrption' THEN description END
+            LIKE '%' || :query || '%') AND
             (:category IS NULL OR category = :category) AND
             (:stage IS NULL OR stage = :stage) 
-        ORDER BY :sortOption || :sortOrder
+        ORDER BY
+            CASE WHEN :sortOrder = 'ASC' AND :sortOption = 'id' THEN id END ASC,
+            CASE WHEN :sortOrder = 'DESC' AND :sortOption = 'id' THEN id END DESC,
+            
+            CASE WHEN :sortOrder = 'ASC' AND :sortOption = 'createdAt' THEN createdAt END ASC,
+            CASE WHEN :sortOrder = 'DESC' AND :sortOption = 'createdAt' THEN createdAt END DESC,
+            
+            CASE WHEN :sortOrder = 'ASC' AND :sortOption = 'updatedAt' THEN updatedAt END ASC,
+            CASE WHEN :sortOrder = 'DESC' AND :sortOption = 'updatedAt' THEN updatedAt END DESC
     """)
     fun getFilteredTasks(
         query: String?,
