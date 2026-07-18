@@ -2,7 +2,6 @@ package com.example.todo.ui.drawer
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.graphics.toColorLong
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todo.data.model.Category
@@ -62,32 +61,32 @@ class DrawerViewModel(
         _uiState.update { it.copy(selectedStage = null) }
     }
 
-    fun enterRemovingMode(type: ActionType){
-        _uiState.update { it.copy(removing = type) }
+    fun enterRemovingMode(type: RemovalType){
+        _uiState.update { it.copy(removalType = type) }
     }
 
     fun exitRemovingMode(){
-        _uiState.update { it.copy(removing = ActionType.NONE) }
+        _uiState.update { it.copy(removalType = RemovalType.NONE) }
     }
 
     fun addCategory(name: String, color: Color){
         viewModelScope.launch(Dispatchers.IO) { taskRepository.addCategory(Category(name, color.toArgb().toLong())) }
     }
 
-    fun removeCategory(category: Category){
+    suspend fun removeCategory(category: Category){
         if(category == Category.DEFAULT_CATEGORY) return
 
-        viewModelScope.launch(Dispatchers.IO) { taskRepository.removeCategory(category) }
+        taskRepository.removeCategory(category)
     }
 
     fun addStage(name: String, color: Color){
         viewModelScope.launch(Dispatchers.IO) { taskRepository.addStage(Stage(name, color.toArgb().toLong())) }
     }
 
-    fun removeStage(stage: Stage){
+    suspend fun removeStage(stage: Stage){
         if(stage == Stage.COMPLETED_STAGE || stage == Stage.INCOMPLETE_STAGE) return
 
-        viewModelScope.launch(Dispatchers.IO) { taskRepository.removeStage(stage) }
+        taskRepository.removeStage(stage)
     }
 
     fun showDialog(type: ActionType){
@@ -95,6 +94,11 @@ class DrawerViewModel(
     }
 
     fun dismissDialog(){
-        _uiState.update { state -> state.copy(dialogType = ActionType.NONE) }
+        _uiState.update { state ->
+            state.copy(
+                dialogType = ActionType.NONE,
+                removalType = RemovalType.NONE
+            )
+        }
     }
 }

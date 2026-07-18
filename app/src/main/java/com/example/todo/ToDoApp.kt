@@ -16,6 +16,7 @@ import com.example.todo.di.AppViewModelProvider
 import com.example.todo.ui.drawer.ActionType
 import com.example.todo.ui.drawer.Drawer
 import com.example.todo.ui.drawer.DrawerViewModel
+import com.example.todo.ui.drawer.RemovalType
 import com.example.todo.ui.navigation.ToDoNavigation
 import com.example.todo.ui.theme.AppColor
 import kotlinx.coroutines.launch
@@ -36,26 +37,26 @@ fun ToDoApp(modifier: Modifier = Modifier) {
             Drawer(
                 drawerState = drawerUiState,
 
-                onCategoryPlus = { drawerViewModel.showDialog(ActionType.CATEGORY) },
+                onCategoryPlus = { drawerViewModel.showDialog(ActionType.ADD_CATEGORY) },
                 onCategoryRemove = {
-                    if(drawerUiState.removing == ActionType.NONE) drawerViewModel.enterRemovingMode(ActionType.CATEGORY)
+                    if(drawerUiState.removalType == RemovalType.NONE) drawerViewModel.enterRemovingMode(RemovalType.REMOVE_CATEGORY)
                     else drawerViewModel.exitRemovingMode()
                 },
                 onCategoryItemClicked = {
-                    if(drawerUiState.removing == ActionType.CATEGORY) drawerViewModel.removeCategory(it)
+                    if(drawerUiState.removalType == RemovalType.REMOVE_CATEGORY) drawerViewModel.showDialog(ActionType.REMOVE_CATEGORY(it))
                     else {
                         drawerViewModel.selectCategory(it)
                         coroutineScope.launch { drawerState.close() }
                     }
                 },
 
-                onStagePlus = { drawerViewModel.showDialog(ActionType.STAGE) },
+                onStagePlus = { drawerViewModel.showDialog(ActionType.ADD_STAGE) },
                 onStageRemove = {
-                    if(drawerUiState.removing == ActionType.NONE) drawerViewModel.enterRemovingMode(ActionType.STAGE)
+                    if(drawerUiState.removalType == RemovalType.NONE) drawerViewModel.enterRemovingMode(RemovalType.REMOVE_STAGE)
                     else drawerViewModel.exitRemovingMode()
                 },
                 onStageItemClicked = {
-                    if(drawerUiState.removing == ActionType.STAGE) drawerViewModel.removeStage(it)
+                    if(drawerUiState.removalType == RemovalType.REMOVE_STAGE) drawerViewModel.showDialog(ActionType.REMOVE_STAGE(it))
                     else {
                         drawerViewModel.selectStage(it)
                         coroutineScope.launch { drawerState.close() }
@@ -66,12 +67,29 @@ fun ToDoApp(modifier: Modifier = Modifier) {
                     drawerViewModel.addCategory(name, color)
                     drawerViewModel.dismissDialog()
                 },
+                onDialogDeleteCategory = {
+                    coroutineScope.launch{
+                        drawerViewModel.removeCategory(it)
+                        drawerViewModel.dismissDialog()
+                    }
+                },
                 onDialogSaveStage = { name, color ->
                     drawerViewModel.addStage(name, color)
                     drawerViewModel.dismissDialog()
                 },
+                onDialogDeleteStage = {
+                    coroutineScope.launch{
+                        drawerViewModel.removeStage(it)
+                        drawerViewModel.dismissDialog()
+                    }
+                },
                 onDialogDismiss = drawerViewModel::dismissDialog,
-                onUpClicked = { coroutineScope.launch { drawerState.close() } },
+                onUpClicked = {
+                    coroutineScope.launch {
+                        drawerState.close()
+                        drawerViewModel.exitRemovingMode()
+                    }
+                },
                 modifier = Modifier.fillMaxWidth(0.9f)
             )
         }

@@ -26,6 +26,7 @@ import com.example.todo.data.model.Stage
 import com.example.todo.ui.componenets.Label
 import com.example.todo.ui.theme.AppColor
 import com.example.todo.ui.util.applyIf
+import com.example.todo.ui.util.isBelowThreshold
 import com.example.todo.ui.util.toColor
 
 @Composable
@@ -48,18 +49,18 @@ inline fun ButtonRow(
             modifier = Modifier.height(30.dp)
         ) {
             ButtonRowLabel(
-                text = stage?.name ?: stringResource(R.string.stage),
-                color = stage?.color?.toColor() ?: AppColor.Surface,
-                filter = stage != null,
-                onClick = onStageClicked,
-                modifier = Modifier.fillMaxHeight()
-            )
-
-            ButtonRowLabel(
                 text = category?.name ?: stringResource(R.string.category),
                 color = category?.color?.toColor() ?: AppColor.Surface,
                 filter = category != null,
                 onClick = onCategoryClicked,
+                modifier = Modifier.fillMaxHeight()
+            )
+
+            ButtonRowLabel(
+                text = stage?.name ?: stringResource(R.string.stage),
+                color = stage?.color?.toColor() ?: AppColor.Surface,
+                filter = stage != null,
+                onClick = onStageClicked,
                 modifier = Modifier.fillMaxHeight()
             )
         }
@@ -101,7 +102,12 @@ fun ButtonRowLabel(
 ) {
     Label(
         text = text,
-        textColor = if (filter) AppColor.Surface else AppColor.OnSurfaceAndBackground,
+        textColor = if (filter) {
+            if (color.isBelowThreshold(50)) AppColor.OnSurfaceAndBackground
+            else AppColor.Background
+        } else {
+            AppColor.OnSurfaceAndBackground
+        },
         fontSize = 14.sp,
         backgroundColor = color,
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),

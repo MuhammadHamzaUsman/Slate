@@ -8,9 +8,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.todo.ToDoApplication
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
-import com.example.todo.domain.repository.TaskRepository
 import com.example.todo.domain.model.Task
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.example.todo.domain.repository.TaskRepository
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,7 +31,6 @@ class HomeScreenViewModel(
     private val _searchState = MutableStateFlow(SearchState())
     val searchState = _searchState.asStateFlow()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     val filteredTasks = _searchState
         .debounce(TYPING_DEBOUNCE_MILLIS.milliseconds)
         .flatMapLatest { searchState ->
@@ -123,8 +121,12 @@ class HomeScreenViewModel(
         }
     }
 
-    fun setShowDialogBox(showingDialog: Boolean){
-         _uiState.update { state -> state.copy(showingDialog = showingDialog) }
+    fun showDialogBox(){
+         _uiState.update { state -> state.copy(showingDialog = true) }
+    }
+
+    fun dismissDialogBox(){
+        _uiState.update { state -> state.copy(showingDialog = false) }
     }
 
     companion object {

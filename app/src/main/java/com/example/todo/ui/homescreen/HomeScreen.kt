@@ -1,7 +1,6 @@
 package com.example.todo.ui.homescreen
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,10 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.todo.domain.model.Task
+import com.example.todo.ui.componenets.ThemedDialog
 import com.example.todo.ui.drawer.DrawerUiState
 import com.example.todo.ui.drawer.DrawerViewModel
 import com.example.todo.ui.theme.AppColor
 import com.example.todo.ui.util.previewTaskRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,12 +47,26 @@ fun HomeScreen(
         viewModel.exitSelectingMode()
     }
 
-    LaunchedEffect(drawerState) {
+    LaunchedEffect(
+        drawerState.selectedStage,
+        drawerState.selectedCategory,
+        drawerState.removalType
+    ) {
         val category = drawerState.selectedCategory
         val stage = drawerState.selectedStage
 
         if(category != null) viewModel.setCategoryFilter(category)
         if(stage != null) viewModel.setStageFilter(stage)
+
+        launch(Dispatchers.Default){
+            searchState.stage?.let {
+                if (it !in drawerState.stages) viewModel.resetStageFilter()
+            }
+
+            searchState.category?.let {
+                if (it !in drawerState.categories) viewModel.resetCategoryFilter()
+            }
+        }
 
         resetSelection()
     }
@@ -79,9 +95,12 @@ fun HomeScreen(
                 category = searchState.category,
                 onStageClicked = onStageClicked,
                 onCategoryClicked = onCategoryClicked,
-                onDeleteClicked = viewModel::deleteTasks,
+                onDeleteClicked = {
+                    if(uiState.taskSelected.isNotEmpty()){
+                        viewModel.showDialogBox()
+                    }
+                },
                 onRemoveFilterClicked = {
-                    Log.d("Filter", "Clcked")
                     viewModel.resetStageFilter()
                     viewModel.resetCategoryFilter()
                 }
@@ -118,8 +137,22 @@ fun HomeScreen(
                 }
             }
         }
-    }
 
+        if(uiState.showingDialog){
+            ThemedDialog(
+                message = "Do you want to delete tasks",
+                onYes = {
+                    viewModel.deleteTasks()
+                    viewModel.dismissDialogBox()
+                },
+                onNo = {
+                    viewModel.exitSelectingMode()
+                    viewModel.dismissDialogBox()
+                },
+                onDismiss = viewModel::dismissDialogBox
+            )
+        }
+    }
 }
 
 @SuppressLint("ViewModelConstructorInComposable")

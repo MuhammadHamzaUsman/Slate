@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.example.todo.data.model.Category
 import com.example.todo.ui.componenets.Label
 import com.example.todo.ui.theme.AppColor
+import com.example.todo.ui.util.isBelowThreshold
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -34,11 +35,13 @@ fun <T> CategoryAndStageDisplay(
             .verticalScroll(rememberScrollState())
     ) {
         items.forEach {
+            val color = Color(color(it))
+
             Label(
                 text = text(it),
-                textColor = AppColor.Background,
+                textColor = if(color.isBelowThreshold(50)) AppColor.OnSurfaceAndBackground else AppColor.Background,
                 fontSize = 14.sp,
-                backgroundColor = Color(color(it)),
+                backgroundColor = color,
                 contentPadding = PaddingValues(8.dp),
                 cornerRadius = 6.dp,
                 modifier = Modifier

@@ -22,6 +22,7 @@ import com.example.todo.R
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 import com.example.todo.ui.componenets.BackButton
+import com.example.todo.ui.componenets.ThemedDialog
 import com.example.todo.ui.theme.AppColor
 import com.example.todo.ui.util.previewTaskRepository
 
@@ -38,7 +39,9 @@ fun Drawer(
     onStageItemClicked: (Stage) -> Unit,
 
     onDialogSaveCategory: (String, Color) -> Unit,
+    onDialogDeleteCategory: (Category) -> Unit,
     onDialogSaveStage: (String, Color) -> Unit,
+    onDialogDeleteStage: (Stage) -> Unit,
     onDialogDismiss: () -> Unit,
 
     onUpClicked: () -> Unit,
@@ -73,7 +76,7 @@ fun Drawer(
 
         HeaderRow(
             header = stringResource(R.string.category),
-            removeSelected = drawerState.removing == ActionType.CATEGORY,
+            removeSelected = drawerState.removalType == RemovalType.REMOVE_CATEGORY,
             onPlus = onCategoryPlus,
             onRemove = onCategoryRemove
         )
@@ -93,7 +96,7 @@ fun Drawer(
 
         HeaderRow(
             header = stringResource(R.string.stage),
-            removeSelected = drawerState.removing == ActionType.STAGE,
+            removeSelected = drawerState.removalType == RemovalType.REMOVE_STAGE,
             onPlus = onStagePlus,
             onRemove = onStageRemove
         )
@@ -112,15 +115,28 @@ fun Drawer(
         )
     }
 
-    when(drawerState.dialogType){
+    when(val type = drawerState.dialogType){
         ActionType.NONE -> { }
-        ActionType.CATEGORY -> InputDialog(
+        ActionType.ADD_CATEGORY -> InputDialog(
             onSave = onDialogSaveCategory,
             onDismissRequest = onDialogDismiss
         )
-        ActionType.STAGE -> InputDialog(
+        ActionType.ADD_STAGE -> InputDialog(
             onSave = onDialogSaveStage,
             onDismissRequest = onDialogDismiss
+        )
+
+        is ActionType.REMOVE_CATEGORY -> ThemedDialog(
+            message = "Deleting ${type.category.name} category will move all of its tasks to 'Uncategorized'.",
+            onYes = { onDialogDeleteCategory(type.category) },
+            onNo = onDialogDismiss,
+            onDismiss = onDialogDismiss
+        )
+        is ActionType.REMOVE_STAGE -> ThemedDialog(
+            message = "Deleting ${type.stage.name} stage will move all of its tasks to 'Incomplete'.",
+            onYes = { onDialogDeleteStage(type.stage) },
+            onNo = onDialogDismiss,
+            onDismiss = onDialogDismiss
         )
     }
 }
@@ -140,9 +156,11 @@ private fun DrawerPreview() {
         onStagePlus = {},
         onStageRemove = {},
         onStageItemClicked = {},
-        onDialogSaveCategory = {_,_ ->},
-        onDialogSaveStage = {_,_ ->},
+        onDialogSaveCategory = { _, _ -> },
+        onDialogSaveStage = { _, _ -> },
         onDialogDismiss = {},
         onUpClicked = {},
+        onDialogDeleteCategory = {},
+        onDialogDeleteStage = {},
     )
 }

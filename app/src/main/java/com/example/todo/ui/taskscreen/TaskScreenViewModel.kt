@@ -79,7 +79,6 @@ class TaskScreenViewModel(
             _taskState.update { it.copy(id = id) }
         }
         else{
-            Log.d("TASK", task.toString())
             taskRepository.updateTask(task)
         }
 

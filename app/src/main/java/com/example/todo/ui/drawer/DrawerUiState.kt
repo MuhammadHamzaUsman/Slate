@@ -5,7 +5,7 @@ import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 
 data class DrawerUiState(
-    val removing: ActionType = ActionType.NONE,
+    val removalType: RemovalType = RemovalType.NONE,
     val dialogType: ActionType = ActionType.NONE,
     val selectedCategory: Category? = null,
     val selectedStage: Stage? = null,
@@ -15,8 +15,4 @@ data class DrawerUiState(
     companion object{
         val INITIAL_COLOR = Color.White
     }
-}
-
-enum class ActionType{
-    NONE, CATEGORY, STAGE
 }

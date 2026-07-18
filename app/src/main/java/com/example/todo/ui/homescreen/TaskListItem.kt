@@ -30,6 +30,7 @@ import com.example.todo.domain.model.Task
 import com.example.todo.ui.componenets.CircleButton
 import com.example.todo.ui.componenets.Label
 import com.example.todo.ui.theme.AppColor
+import com.example.todo.ui.util.isBelowThreshold
 
 @Composable
 fun TaskListItem(
@@ -114,11 +115,14 @@ private fun ListLabel(
     color: Long,
     modifier: Modifier = Modifier
 ) {
+    val color = Color(color)
+
     Label(
         text = name,
-        textColor = AppColor.Surface,
+        textColor = if (color.isBelowThreshold(50)) AppColor.OnSurfaceAndBackground
+        else AppColor.Background,
         fontSize = 12.sp,
-        backgroundColor = Color(color),
+        backgroundColor = color,
         contentPadding = PaddingValues(horizontal = 4.dp),
         cornerRadius = 4.dp,
         modifier = modifier
