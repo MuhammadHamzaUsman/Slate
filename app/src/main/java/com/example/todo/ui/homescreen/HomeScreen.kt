@@ -130,6 +130,7 @@ fun HomeScreen(
                     TaskListItem(
                         task = it,
                         isSelected = isSelected,
+                        inSelectMode = uiState.isSelecting,
                         onActionButtonClicked = viewModel::completeTask,
                         onItemClicked = { task ->
                             if (uiState.isSelecting) {

@@ -1,6 +1,7 @@
 package com.example.todo.ui.homescreen.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +33,7 @@ import com.example.todo.domain.model.Task
 import com.example.todo.ui.componenets.CircleButton
 import com.example.todo.ui.componenets.Label
 import com.example.todo.ui.theme.AppColor
+import com.example.todo.ui.util.applyIf
 import com.example.todo.ui.util.isBelowThreshold
 import java.time.LocalDateTime
 
@@ -38,20 +42,33 @@ fun TaskListItem(
     modifier: Modifier = Modifier,
     task: Task,
     isSelected: Boolean,
+    inSelectMode: Boolean,
     onActionButtonClicked: (Task) -> Unit,
     onItemClicked: (Task) -> Unit,
     onLongPress: (Task) -> Unit
 ) {
-    val color by animateColorAsState(if(isSelected) AppColor.OnSurfaceAndBackground else AppColor.Outline,)
+    val borderColor by animateColorAsState(if(isSelected) AppColor.OnSurfaceAndBackground else AppColor.Outline,)
+    val elevation by animateDpAsState(if(inSelectMode) 16.dp else 0.dp)
+    val density = LocalDensity.current
 
     Card(
         colors = CardDefaults.cardColors(containerColor = AppColor.Surface),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(
             width = 2.dp,
-            color = color
+            color = borderColor
         ),
         modifier = modifier
+            .applyIf(inSelectMode) { modifier ->
+                modifier.dropShadow(RoundedCornerShape(8.dp)) {
+                    color = AppColor.OnSurfaceAndBackground.copy(alpha = 0.6f)
+
+                    with(density) {
+                        radius = elevation.toPx()
+                        spread = (-5).dp.toPx()
+                    }
+                }
+            }
             .combinedClickable(
                 onClick = { onItemClicked(task) },
                 onLongClick = { onLongPress(task) }
@@ -146,6 +163,7 @@ private fun TaskListItemPreview() {
         onActionButtonClicked = {},
         onItemClicked = {},
         onLongPress = {},
-        isSelected = true
+        isSelected = true,
+        inSelectMode = true,
     )
 }

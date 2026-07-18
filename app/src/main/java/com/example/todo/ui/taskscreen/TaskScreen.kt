@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
@@ -54,10 +55,15 @@ fun TaskScreen(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
     ) {
-        stickyHeader {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        item{
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillParentMaxSize()
+            ) {
                 BackButton(
                     size = 30.dp,
                     onClick = onUpClicked
@@ -73,15 +79,9 @@ fun TaskScreen(
                     onSaveClicked = { taskScreenViewModel.saveTask(context) },
                     onCompleteClicked = { taskScreenViewModel.updateStage(Stage.COMPLETED_STAGE) }
                 )
-            }
-        }
 
-        item {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
                 Box(
-                    contentAlignment = Alignment.CenterStart
+                    contentAlignment = Alignment.CenterStart,
                 ){
                     BasicTextField(
                         value = taskState.title,
@@ -91,7 +91,8 @@ fun TaskScreen(
                             fontSize = 28.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = AppColor.OnSurfaceAndBackground
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth()
                     )
 
                     this@Column.AnimatedVisibility(taskState.title.isEmpty()) {
@@ -104,16 +105,30 @@ fun TaskScreen(
                     }
                 }
 
-                BasicTextField(
-                    value = taskState.description,
-                    onValueChange = taskScreenViewModel::updateDescription,
-                    textStyle = TextStyle(
-                        fontSize = 16.sp,
-                        color = AppColor.OnSurfaceAndBackground
-                    ),
-                    cursorBrush = SolidColor(AppColor.ButtonOutline),
-                    modifier = Modifier.fillMaxSize()
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    BasicTextField(
+                        value = taskState.description,
+                        onValueChange = taskScreenViewModel::updateDescription,
+                        textStyle = TextStyle(
+                            fontSize = 16.sp,
+                            color = AppColor.OnSurfaceAndBackground
+                        ),
+                        cursorBrush = SolidColor(AppColor.ButtonOutline),
+                        modifier = Modifier.matchParentSize()
+                    )
+
+                    this@Column.AnimatedVisibility(taskState.description.isEmpty()) {
+                        Text(
+                            text = "Description",
+                            fontSize = 16.sp,
+                            color = AppColor.OnSurfaceAndBackground
+                        )
+                    }
+                }
             }
         }
     }

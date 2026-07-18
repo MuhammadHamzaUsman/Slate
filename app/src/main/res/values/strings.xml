@@ -17,4 +17,6 @@
     <string name="search_option">Search Option</string>
     <string name="do_you_want_to_delete_tasks">Do you want to delete tasks</string>
     <string name="drop_down_menu_category_icon">%1$s Icon</string>
+    <string name="task_can_not_be_saved">Can not save Task enter title or description.</string>
+    <string name="task_saved">Task Saved</string>
 </resources>

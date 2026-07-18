@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.example.todo.R
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 import com.example.todo.domain.repository.TaskRepository
@@ -48,7 +49,7 @@ class TaskScreenViewModel(
         viewModelScope.launch {
             while (true){
                 delay(SAVE_TIME_GAP.milliseconds)
-                saveTask()
+                if(canSave) saveTask()
             }
         }
     }
@@ -85,16 +86,27 @@ class TaskScreenViewModel(
     }
 
     fun saveTask(context: Context){
-        viewModelScope.launch {
-            saveTask()
+        if(canSave){
+            viewModelScope.launch {
+                saveTask()
 
-            val toast = Toast(context).apply {
-                setText("Task Saved")
+                Toast(context).apply {
+                    setText(context.getString(R.string.task_saved))
+                }.show()
             }
-
-            toast.show()
+        }
+        else{
+            Toast(context).apply {
+                setText(context.getString(R.string.task_can_not_be_saved))
+            }.show()
         }
     }
+
+    private val canSave: Boolean
+        get(){
+            val state = _taskState.value
+            return state.title.isNotBlank() || state.description.isNotBlank()
+        }
 
     companion object{
         private const val TIMEOUT_MILLIS = 5000L
