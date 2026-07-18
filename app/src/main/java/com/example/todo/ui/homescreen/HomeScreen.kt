@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -85,10 +86,10 @@ fun HomeScreen(
         modifier = modifier
     ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp,)
         ) {
             ThemedSearchBar(
                 query = searchState.query,
@@ -116,10 +117,12 @@ fun HomeScreen(
                 onRemoveFilterClicked = {
                     viewModel.resetStageFilter()
                     viewModel.resetCategoryFilter()
-                }
+                },
+                modifier = Modifier.padding(top = 16.dp)
             )
 
             LazyColumn(
+                contentPadding = PaddingValues(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier
                     .fillMaxWidth(),

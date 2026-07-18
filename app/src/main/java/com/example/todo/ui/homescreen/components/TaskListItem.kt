@@ -48,7 +48,7 @@ fun TaskListItem(
     onLongPress: (Task) -> Unit
 ) {
     val borderColor by animateColorAsState(if(isSelected) AppColor.OnSurfaceAndBackground else AppColor.Outline,)
-    val elevation by animateDpAsState(if(inSelectMode) 16.dp else 0.dp)
+    val elevation by animateDpAsState(if(inSelectMode) 9.dp else 0.dp)
     val density = LocalDensity.current
 
     Card(
@@ -61,11 +61,10 @@ fun TaskListItem(
         modifier = modifier
             .applyIf(inSelectMode) { modifier ->
                 modifier.dropShadow(RoundedCornerShape(8.dp)) {
-                    color = AppColor.OnSurfaceAndBackground.copy(alpha = 0.6f)
+                    color = AppColor.OnSurfaceAndBackground.copy(alpha = 0.3f)
 
                     with(density) {
                         radius = elevation.toPx()
-                        spread = (-5).dp.toPx()
                     }
                 }
             }
@@ -148,7 +147,7 @@ private fun ListLabel(
 }
 
 
-@Preview
+@Preview()
 @Composable
 private fun TaskListItemPreview() {
     TaskListItem(
