@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.example.todo.domain.model.Task
+import com.example.todo.data.util.toLongMillis
 
 @Entity(
     tableName = "task",
@@ -40,7 +41,9 @@ data class TaskEntity(
         index = true,
         defaultValue = Stage.INCOMPLETE_NAME
     )
-    val stage: String
+    val stage: String,
+    val createdAt: Long,
+    val updatedAt: Long
 )
 
 fun Task.toTaskEntity(): TaskEntity = TaskEntity(
@@ -48,5 +51,7 @@ fun Task.toTaskEntity(): TaskEntity = TaskEntity(
     title = title,
     description = description,
     category = category.name,
-    stage = stage.name
+    stage = stage.name,
+    createdAt = createdAt.toLongMillis(),
+    updatedAt = updatedAt.toLongMillis()
 )

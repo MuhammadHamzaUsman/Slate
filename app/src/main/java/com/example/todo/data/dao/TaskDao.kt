@@ -7,6 +7,8 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.example.todo.data.model.TaskWithDetails
 import com.example.todo.data.model.TaskEntity
+import com.example.todo.domain.model.SearchField
+import com.example.todo.domain.model.SortOrder
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,11 +32,19 @@ interface TaskDao {
     @Transaction
     @Query("""
         SELECT * FROM task
-        WHERE (:title IS NULL OR title LIKE '%' || :title || '%') AND
+        WHERE (:searchField IS NULL OR title LIKE '%' || :query || '%') AND
             (:category IS NULL OR category = :category) AND
             (:stage IS NULL OR stage = :stage) 
+        ORDER BY :sortOption || :sortOrder
     """)
-    fun getFilteredTasks(title: String?, category: String?, stage: String?): Flow<List<TaskWithDetails>>
+    fun getFilteredTasks(
+        query: String?,
+        category: String?,
+        stage: String?,
+        sortOption: String,
+        sortOrder: String,
+        searchField: String
+    ): Flow<List<TaskWithDetails>>
 
     @Insert
     suspend fun insertTask(task: TaskEntity): Long

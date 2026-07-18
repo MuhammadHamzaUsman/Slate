@@ -1,4 +1,4 @@
-package com.example.todo.ui.homescreen
+package com.example.todo.ui.homescreen.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
@@ -31,6 +31,7 @@ import com.example.todo.ui.componenets.CircleButton
 import com.example.todo.ui.componenets.Label
 import com.example.todo.ui.theme.AppColor
 import com.example.todo.ui.util.isBelowThreshold
+import java.time.LocalDateTime
 
 @Composable
 fun TaskListItem(
@@ -138,7 +139,9 @@ private fun TaskListItemPreview() {
             title = "Lorem ipsum dolor sit amet",
             description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
             category = Category.DEFAULT_CATEGORY,
-            stage = Stage.INCOMPLETE_STAGE
+            stage = Stage.INCOMPLETE_STAGE,
+            createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now()
         ),
         onActionButtonClicked = {},
         onItemClicked = {},

@@ -23,6 +23,9 @@ import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 import com.example.todo.ui.componenets.BackButton
 import com.example.todo.ui.componenets.ThemedDialog
+import com.example.todo.ui.drawer.components.CategoryAndStageDisplay
+import com.example.todo.ui.drawer.components.HeaderRow
+import com.example.todo.ui.drawer.components.InputDialog
 import com.example.todo.ui.theme.AppColor
 import com.example.todo.ui.util.previewTaskRepository
 

@@ -1,4 +1,4 @@
-package com.example.todo.ui.homescreen
+package com.example.todo.ui.homescreen.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

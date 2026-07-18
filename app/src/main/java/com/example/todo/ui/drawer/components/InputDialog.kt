@@ -1,4 +1,4 @@
-package com.example.todo.ui.drawer
+package com.example.todo.ui.drawer.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -34,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.todo.R
+import com.example.todo.ui.drawer.DrawerUiState
+import com.example.todo.ui.drawer.InputDialogRules
 import com.example.todo.ui.theme.AppColor
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.HsvColorPicker

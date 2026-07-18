@@ -5,4 +5,5 @@ data class HomeScreenUiState(
     val isSelecting: Boolean = false,
     val taskSelected: Set<Int> = emptySet(),
     val showingDialog: Boolean = false,
+    val isDropDownExpanded: Boolean = false
 )

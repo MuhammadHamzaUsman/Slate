@@ -6,6 +6,8 @@ import com.example.todo.data.dao.TaskDao
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
 import com.example.todo.data.model.TaskWithDetails
+import com.example.todo.data.model.dataBaseColumn
+import com.example.todo.data.model.dataBaseKeyword
 import com.example.todo.data.model.toTaskEntity
 import com.example.todo.domain.model.Task
 import com.example.todo.domain.repository.TaskRepository
@@ -26,9 +28,12 @@ class LocalTaskRepository(
 
     override fun getFilteredTasks(searchState: SearchState): Flow<List<Task>> = taskDao
         .getFilteredTasks(
-            title = searchState.query.ifBlank { null },
+            query = searchState.query.ifBlank { null },
             category = searchState.category?.name,
-            stage = searchState.stage?.name
+            stage = searchState.stage?.name,
+            sortOption = searchState.sortOption.dataBaseColumn,
+            sortOrder = searchState.sortOrder.dataBaseKeyword,
+            searchField = searchState.searchField.dataBaseColumn
         )
         .mapToTaskList()
 

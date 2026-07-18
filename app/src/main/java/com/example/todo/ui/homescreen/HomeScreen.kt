@@ -15,13 +15,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.todo.R
 import com.example.todo.domain.model.Task
 import com.example.todo.ui.componenets.ThemedDialog
 import com.example.todo.ui.drawer.DrawerUiState
 import com.example.todo.ui.drawer.DrawerViewModel
+import com.example.todo.ui.homescreen.components.ButtonRow
+import com.example.todo.ui.homescreen.components.FloatingActionButton
+import com.example.todo.ui.homescreen.components.TaskListItem
+import com.example.todo.ui.homescreen.components.ThemedSearchBar
 import com.example.todo.ui.theme.AppColor
 import com.example.todo.ui.util.previewTaskRepository
 import kotlinx.coroutines.Dispatchers
@@ -86,8 +92,15 @@ fun HomeScreen(
         ) {
             ThemedSearchBar(
                 query = searchState.query,
+                isDropDownMenuExpanded = uiState.isDropDownExpanded,
+                categories = viewModel.CATEGORIES,
+                onDismiss = viewModel::closeDropDownMenu,
                 onQueryChange = viewModel::updateSearchQuery,
-                onSearch = viewModel::updateSearchQuery
+                onSearch = viewModel::updateSearchQuery,
+                onSearchOptionClick = {
+                    if(uiState.isDropDownExpanded) viewModel.closeDropDownMenu()
+                    else viewModel.openDropDownMenu()
+                }
             )
 
             ButtonRow(
@@ -96,7 +109,7 @@ fun HomeScreen(
                 onStageClicked = onStageClicked,
                 onCategoryClicked = onCategoryClicked,
                 onDeleteClicked = {
-                    if(uiState.taskSelected.isNotEmpty()){
+                    if (uiState.taskSelected.isNotEmpty()) {
                         viewModel.showDialogBox()
                     }
                 },
@@ -120,14 +133,12 @@ fun HomeScreen(
                         onActionButtonClicked = viewModel::completeTask,
                         onItemClicked = { task ->
                             if (uiState.isSelecting) {
-                                if(isSelected) {
+                                if (isSelected) {
                                     viewModel.removeFromSelectedTask(task)
-                                }
-                                else {
+                                } else {
                                     viewModel.addToSelectedTask(task)
                                 }
-                            }
-                            else onTaskClicked(it)
+                            } else onTaskClicked(it)
                         },
                         onLongPress = { task ->
                             viewModel.enterSelectMode()
@@ -140,7 +151,7 @@ fun HomeScreen(
 
         if(uiState.showingDialog){
             ThemedDialog(
-                message = "Do you want to delete tasks",
+                message = stringResource(R.string.do_you_want_to_delete_tasks),
                 onYes = {
                     viewModel.deleteTasks()
                     viewModel.dismissDialogBox()

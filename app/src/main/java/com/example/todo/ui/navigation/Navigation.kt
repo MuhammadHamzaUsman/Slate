@@ -1,5 +1,7 @@
 package com.example.todo.ui.navigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,6 +28,10 @@ fun ToDoNavigation(
     NavHost(
         navController = controller,
         startDestination = AppRoute.HomeScreen,
+        enterTransition = { slideInHorizontally{ it } },
+        exitTransition = { slideOutHorizontally{ -it } },
+        popEnterTransition = { slideInHorizontally{ -it } },
+        popExitTransition = { slideOutHorizontally{ it } },
         modifier = modifier
     ){
         composable<AppRoute.HomeScreen>{

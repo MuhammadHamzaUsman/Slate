@@ -3,6 +3,7 @@ package com.example.todo.data.model
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.example.todo.domain.model.Task
+import com.example.todo.data.util.toDate
 
 data class TaskWithDetails(
     @Embedded
@@ -19,5 +20,13 @@ data class TaskWithDetails(
     )
     val stage: Stage
 ){
-    fun toTask() = Task(task.id, task.title, task.description, category, stage)
+    fun toTask() = Task(
+        id = task.id,
+        title = task.title,
+        description = task.description,
+        category = category,
+        stage = stage,
+        createdAt = task.createdAt.toDate(),
+        updatedAt = task.updatedAt.toDate()
+    )
 }

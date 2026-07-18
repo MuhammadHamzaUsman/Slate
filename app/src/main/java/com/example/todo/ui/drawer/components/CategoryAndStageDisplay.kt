@@ -1,4 +1,4 @@
-package com.example.todo.ui.drawer
+package com.example.todo.ui.drawer.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

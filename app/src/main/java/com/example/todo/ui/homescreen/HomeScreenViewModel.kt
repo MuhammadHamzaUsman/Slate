@@ -1,15 +1,16 @@
 package com.example.todo.ui.homescreen
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.todo.ToDoApplication
+import com.example.todo.R
 import com.example.todo.data.model.Category
 import com.example.todo.data.model.Stage
+import com.example.todo.domain.model.SearchField
+import com.example.todo.domain.model.SortOption
+import com.example.todo.domain.model.SortOrder
 import com.example.todo.domain.model.Task
 import com.example.todo.domain.repository.TaskRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -31,6 +32,7 @@ class HomeScreenViewModel(
     private val _searchState = MutableStateFlow(SearchState())
     val searchState = _searchState.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val filteredTasks = _searchState
         .debounce(TYPING_DEBOUNCE_MILLIS.milliseconds)
         .flatMapLatest { searchState ->
@@ -60,6 +62,18 @@ class HomeScreenViewModel(
 
     fun resetStageFilter(){
         _searchState.update { state -> state.copy(stage = null) }
+    }
+
+    fun setSortOption(sortOption: SortOption){
+        _searchState.update { state -> state.copy(sortOption = sortOption) }
+    }
+
+    fun setSortOrder(sortOrder: SortOrder){
+        _searchState.update { state -> state.copy(sortOrder = sortOrder) }
+    }
+
+    fun setSearchField(searchField: SearchField){
+        _searchState.update { state -> state.copy(searchField = searchField) }
     }
 
     fun enterSelectMode(){
@@ -129,15 +143,92 @@ class HomeScreenViewModel(
         _uiState.update { state -> state.copy(showingDialog = false) }
     }
 
+    fun openDropDownMenu(){
+        _uiState.update { it.copy(isDropDownExpanded = true) }
+    }
+
+    fun closeDropDownMenu(){
+        _uiState.update { it.copy(isDropDownExpanded = false) }
+    }
+
+    val CATEGORIES: List<DropDownMenuCategory> = listOf(
+        DropDownMenuCategory(
+            header = "Sort Option",
+            icon = R.drawable.sort_icon,
+            options = listOf(
+                DropDownMenuOption(
+                    label = "None",
+                    onClick = {
+                        setSortOption(SortOption.NONE)
+                        closeDropDownMenu()
+                    }
+                ),
+
+                DropDownMenuOption(
+                    label = "Date Created",
+                    onClick = {
+                        setSortOption(SortOption.CREATED)
+                        closeDropDownMenu()
+                    }
+                ),
+
+                DropDownMenuOption(
+                    label = "Recently Updated",
+                    onClick = {
+                        setSortOption(SortOption.UPDATED)
+                        closeDropDownMenu()
+                    }
+                )
+            )
+        ),
+
+        DropDownMenuCategory(
+            header = "Sort Order",
+            icon = R.drawable.sort_order_icon,
+            options = listOf(
+                DropDownMenuOption(
+                    label = "Ascending",
+                    onClick = {
+                        setSortOrder(SortOrder.ASCENDING)
+                        closeDropDownMenu()
+                    }
+                ),
+
+                DropDownMenuOption(
+                    label = "Descending",
+                    onClick = {
+                        setSortOrder(SortOrder.DESCENDING)
+                        closeDropDownMenu()
+                    }
+                )
+            )
+        ),
+
+        DropDownMenuCategory(
+            header = "Search Field",
+            icon = R.drawable.search_gear_icon,
+            options = listOf(
+                DropDownMenuOption(
+                    label = "Title",
+                    onClick = {
+                        setSearchField(SearchField.TITLE)
+                        closeDropDownMenu()
+                    }
+                ),
+
+                DropDownMenuOption(
+                    label = "Description",
+                    onClick = {
+                        setSearchField(SearchField.DESCRIPTION)
+                        closeDropDownMenu()
+                    }
+                )
+            )
+        )
+    )
+
     companion object {
         private const val TYPING_DEBOUNCE_MILLIS = 500
         private const val TIMEOUT_MILLIS = 5000L
-        val FACTORY = viewModelFactory {
-            initializer {
-                val app = this[APPLICATION_KEY] as ToDoApplication
-                val container = app.container
-                HomeScreenViewModel(container.taskRepository)
-            }
-        }
     }
 }

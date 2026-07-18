@@ -13,4 +13,8 @@
     <string name="max_15_characters">Max %1$d/15 characters</string>
     <string name="max_characters">Max %1$d/%2$d characters</string>
     <string name="add_new_task">Add New Task</string>
+    <string name="search">Search</string>
+    <string name="search_option">Search Option</string>
+    <string name="do_you_want_to_delete_tasks">Do you want to delete tasks</string>
+    <string name="drop_down_menu_category_icon">%1$s Icon</string>
 </resources>
