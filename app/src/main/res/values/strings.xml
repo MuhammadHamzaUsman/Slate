@@ -2,7 +2,7 @@
     <string name="app_name">ToDo</string>
     <string name="stage">Stage</string>
     <string name="categories">Categories</string>
-    <string name="close_drawer">Close Drawer</string>
+    <string name="close_navigation_drawer">Close Drawer</string>
     <string name="remove_header">Remove %1$s</string>
     <string name="add_header">add %1$s</string>
     <string name="category">Category</string>

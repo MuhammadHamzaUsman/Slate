@@ -19,7 +19,7 @@ fun BackButton(
 ) {
     Icon(
         painter = painterResource(R.drawable.back_icon),
-        contentDescription = stringResource(R.string.close_drawer),
+        contentDescription = stringResource(R.string.close_navigation_drawer),
         tint = AppColor.OnSurfaceAndBackground,
         modifier = modifier
             .size(size)

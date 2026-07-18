@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface TaskRepository {
     fun getTasks(): Flow<List<Task>>
     fun getFilteredTasks(searchState: SearchState): Flow<List<Task>>
-    fun getTasksByCategory(category: Category): Flow<List<Task>>
-    fun getTasksByStage(stage: Stage): Flow<List<Task>>
     fun getTask(id: Int): Task?
 
     suspend fun insertTask(task: Task): Int

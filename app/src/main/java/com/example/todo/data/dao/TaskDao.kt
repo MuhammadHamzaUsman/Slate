@@ -5,10 +5,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.example.todo.data.model.TaskWithDetails
 import com.example.todo.data.model.TaskEntity
-import com.example.todo.domain.model.SearchField
-import com.example.todo.domain.model.SortOrder
+import com.example.todo.data.model.TaskWithDetails
 import kotlinx.coroutines.flow.Flow
 
 @Dao

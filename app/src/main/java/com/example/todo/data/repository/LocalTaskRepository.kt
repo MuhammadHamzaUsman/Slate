@@ -37,14 +37,6 @@ class LocalTaskRepository(
         )
         .mapToTaskList()
 
-    override fun getTasksByCategory(category: Category): Flow<List<Task>> = taskDao
-        .getTasksByCategory(category.name)
-        .mapToTaskList()
-
-    override fun getTasksByStage(stage: Stage): Flow<List<Task>> = taskDao
-        .getTasksByStage(stage.name)
-        .mapToTaskList()
-
     override fun getTask(id: Int): Task? = taskDao.getTask(id)?.toTask()
 
     override suspend fun insertTask(task: Task) = withContext(Dispatchers.IO) {

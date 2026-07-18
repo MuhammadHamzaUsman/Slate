@@ -49,16 +49,8 @@ class DrawerViewModel(
         _uiState.update { it.copy(selectedCategory = category) }
     }
 
-    fun unSelectCategory(){
-        _uiState.update { it.copy(selectedCategory = null) }
-    }
-
     fun selectStage(stage: Stage){
         _uiState.update { it.copy(selectedStage = stage) }
-    }
-
-    fun unSelectStage(){
-        _uiState.update { it.copy(selectedStage = null) }
     }
 
     fun enterRemovingMode(type: RemovalType){

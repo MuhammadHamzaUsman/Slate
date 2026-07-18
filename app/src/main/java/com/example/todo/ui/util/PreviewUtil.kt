@@ -15,8 +15,6 @@ import kotlinx.coroutines.flow.flowOf
 fun previewTaskRepository(): TaskRepository = object : TaskRepository {
     override fun getTasks(): Flow<List<Task>> = flowOf()
     override fun getFilteredTasks(searchState: SearchState): Flow<List<Task>> = flowOf()
-    override fun getTasksByCategory(category: Category): Flow<List<Task>> = flowOf()
-    override fun getTasksByStage(stage: Stage): Flow<List<Task>> = flowOf()
     override fun getTask(id: Int): Task? = null
     override suspend fun insertTask(task: Task): Int = 0
     override suspend fun updateTask(task: Task) {}
